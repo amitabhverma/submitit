@@ -137,7 +137,10 @@ class JobEnvironment:
     def _usr_sig(cls) -> tp.Any:
         name = "SIG" + cls.USR_SIG
         out = getattr(signal, name, None)
-        if out is None:
+        if cls.USR_SIG == "USR2":
+            name = "SIGTERM"
+            out = getattr(signal, name, None)
+        elif out is None:
             raise RuntimeError(
                 f"Unknown signal {name}, you may need to unset or update env var {_PREEMPT_SIG_ENV} (Eg: USR2)"
             )
@@ -154,7 +157,7 @@ class JobEnvironment:
         # A priori we don't need other signals anymore,
         # but still log them to make it easier to debug.
         signal.signal(signal.SIGTERM, handler.bypass)
-        signal.signal(signal.SIGCONT, handler.bypass)
+        #signal.signal(signal.SIGCONT, handler.bypass)
 
     # pylint: disable=unused-argument
     def _requeue(self, countdown: int) -> None:
