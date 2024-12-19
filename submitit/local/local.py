@@ -320,7 +320,7 @@ class Controller:
 
     def kill_tasks(self) -> None:
         # try and be progressive in deletion...
-        for sig in [signal.SIGINT, signal.SIGKILL]:
+        for sig in [signal.SIGINT, signal.SIGTERM]:
             self._forward_signal(sig)
             # if one is still alive after sigterm and sigint, try sigkill after 1s
             if sig == signal.SIGINT and any(t.poll() is None for t in self.tasks):
